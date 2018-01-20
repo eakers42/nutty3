@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
@@ -39,6 +40,9 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private final NuttyGame game;
+
+
+
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private Vector3 screenCoordinates = new Vector3();
@@ -112,6 +116,18 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             camera.position.y -= 4;
         }
+
+
+        TiledMapTileLayer tileLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+        float mapWidth = tileLayer.getWidth() * tileLayer.getTileWidth();
+        float mapHeight = tileLayer.getHeight() * tileLayer.getTileHeight();
+        float minX = WORLD_WIDTH / 2;
+        float maxX = mapWidth - minX;
+        float minY = WORLD_HEIGHT / 2;
+        float maxY = mapHeight - minY;
+
+        camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
+        camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
         camera.update();
         tiledMapRenderer.setView(camera);
 
@@ -142,7 +158,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
             // Add a new mine
             float x = MathUtils.random(100f, MAP_WIDTH - 100);
             float y = MAP_HEIGHT;
-            SpinningMine mine = new SpinningMine(mineTexture, x, y);
+            SpinningMine mine = new SpinningMine(this, mineTexture, x, y);
             this.mineList.add(mine);
         }
 
@@ -206,5 +222,13 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public TiledMap getTiledMap() {
+        return tiledMap;
+    }
+
+    public void setTiledMap(TiledMap tiledMap) {
+        this.tiledMap = tiledMap;
     }
 }

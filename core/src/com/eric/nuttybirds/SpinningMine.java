@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -21,6 +23,8 @@ public class SpinningMine {
     public static final int WIDTH = 94;
     public static final int HEIGHT = 94;
 
+    private final GameScreen gameScreen;
+
     private final Rectangle collisionRectangle = new Rectangle(0, 0, WIDTH, HEIGHT);
 
     private float x = 0;
@@ -31,7 +35,8 @@ public class SpinningMine {
     private float animationTimer = 0;
     private final Animation<TextureRegion> flying;
 
-    public SpinningMine(Texture texture, float x, float y) {
+    public SpinningMine(GameScreen gameScreen, Texture texture, float x, float y) {
+        this.gameScreen = gameScreen;
         this.x = x;
         this.y = y;
         this.xSpeed = MathUtils.random(-5, 5);
@@ -47,6 +52,8 @@ public class SpinningMine {
         this.x += this.xSpeed;
         this.y += this.ySpeed;
 
+        TiledMapTileLayer tileLayer = (TiledMapTileLayer) gameScreen.getTiledMap().getLayers().get(0);
+        float mapWidth = tileLayer.getWidth() * tileLayer.getTileWidth();
         if (this.x < 0 || this.x > (MAP_WIDTH - WIDTH / 2)) {
             // Reverse direction
             this.xSpeed = -this.xSpeed;
