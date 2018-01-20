@@ -8,14 +8,20 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -25,6 +31,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class GameScreen extends ScreenAdapter implements InputProcessor {
     private static final float WORLD_WIDTH = 1200;
     private static final float WORLD_HEIGHT = 1600;
+    private static final float MAP_WIDTH = 2560;
+    private static final float MAP_HEIGHT = 5120;
+
     private ShapeRenderer shapeRenderer;
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -34,6 +43,12 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private Vector3 screenCoordinates = new Vector3();
     private boolean mouseDown = false;
+
+    private Texture mineTexture;
+
+    // Sprites
+    private List<SpinningMine> mineList = new ArrayList<SpinningMine>();
+
 
     public GameScreen(NuttyGame game) {
         this.game = game;
@@ -59,6 +74,8 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
         tiledMapRenderer.setView(this.camera);
 
+        mineTexture = game.getAssetManager().get("mine_strip25.png");
+
         Gdx.input.setInputProcessor(this);
     }
 
@@ -74,6 +91,11 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         shapeRenderer.setProjectionMatrix(camera.projection);
         shapeRenderer.setTransformMatrix(camera.view);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        for (SpinningMine mine : this.mineList) {
+            mine.drawDebug(shapeRenderer);
+        }
+
         shapeRenderer.end();
     }
 
@@ -92,9 +114,17 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         }
         camera.update();
         tiledMapRenderer.setView(camera);
-//        batch.setProjectionMatrix(camera.projection);
-//        batch.setTransformMatrix(camera.view);
+
+        // Draw the mines after the map so everything shows above the map
+        batch.setProjectionMatrix(camera.projection);
+        batch.setTransformMatrix(camera.view);
         tiledMapRenderer.render();
+
+        batch.begin();
+        for (SpinningMine mine : this.mineList) {
+            mine.draw(batch);
+        }
+        batch.end();
 
         if (mouseDown) {
             mouseDown = false;
@@ -108,7 +138,22 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     }
 
     private void update(float delta) {
+        if (MathUtils.random() < 0.05 && mineList.size() < 50) {
+            // Add a new mine
+            float x = MathUtils.random(100f, MAP_WIDTH - 100);
+            float y = MAP_HEIGHT;
+            SpinningMine mine = new SpinningMine(mineTexture, x, y);
+            this.mineList.add(mine);
+        }
 
+        Iterator<SpinningMine> iter = mineList.iterator();
+        while (iter.hasNext()) {
+            SpinningMine mine = iter.next();
+            mine.update(delta);
+            if (mine.getY() < 0) {
+                iter.remove();
+            }
+        }
     }
 
     @Override
