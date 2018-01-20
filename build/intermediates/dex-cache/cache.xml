@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\Users\erica_000\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx\1.9.6\47d1e9b890e364ec28f128e9bb3b9a12a94c164\gdx-1.9.6.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="047d1e9b890e364ec28f128e9bb3b9a12a94c164">
+        <dex dex="C:\Users\erica_000\Documents\libGDX\nutty\android\build\intermediates\pre-dexed\debug\gdx-1.9.6_41ddb333d41407498e9e781c91a527e0e41e9089.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\erica_000\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-box2d\1.9.6\c249ef4060a4fada952f278455c8f7b9cba3c18a\gdx-box2d-1.9.6.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c249ef4060a4fada952f278455c8f7b9cba3c18a">
+        <dex dex="C:\Users\erica_000\Documents\libGDX\nutty\android\build\intermediates\pre-dexed\debug\gdx-box2d-1.9.6_67590e8b7fb1f9af1b6f585fcfa2cedb0a803ae5.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\erica_000\Documents\libGDX\nutty\android\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="C:\Users\erica_000\Documents\libGDX\nutty\android\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_b5daee124d988405cfa51be3adedf59a7fd60d75\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\erica_000\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-backend-android\1.9.6\57c2831c870743712b808384187ea856e541878f\gdx-backend-android-1.9.6.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="57c2831c870743712b808384187ea856e541878f">
+        <dex dex="C:\Users\erica_000\Documents\libGDX\nutty\android\build\intermediates\pre-dexed\debug\gdx-backend-android-1.9.6_7a84540bbac1e84b0005293aada997e189251be4.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\erica_000\Documents\libGDX\nutty\android\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4153897e1c50c98772efd3e7eac4802470a98a2b">
+        <dex dex="C:\Users\erica_000\Documents\libGDX\nutty\android\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_fe31837130bdffdc4b09c2e5f6a7a26f84238583\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\erica_000\Documents\libGDX\nutty\core\build\libs\core-1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="14d7e487908092a427694743833c463d1467c974">
+        <dex dex="C:\Users\erica_000\Documents\libGDX\nutty\android\build\intermediates\pre-dexed\debug\core-1.0_7270d91a320fc0826a7885fcfba662eec126a439.jar" />
+    </item>
+
+</items>

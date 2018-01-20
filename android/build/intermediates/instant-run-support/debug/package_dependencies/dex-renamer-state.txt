@@ -1,0 +1,10 @@
+#Thu Jan 18 20:33:15 CST 2018
+renamed.2=classes2.dex
+renamed.1=classes3.dex
+renamed.0=classes.dex
+base.2=C\:\\Users\\erica_000\\Documents\\libGDX\\nutty\\android\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\gdx-backend-android-1.9.6_7a84540bbac1e84b0005293aada997e189251be4
+base.1=C\:\\Users\\erica_000\\Documents\\libGDX\\nutty\\android\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\gdx-box2d-1.9.6_67590e8b7fb1f9af1b6f585fcfa2cedb0a803ae5
+base.0=C\:\\Users\\erica_000\\Documents\\libGDX\\nutty\\android\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\gdx-1.9.6_41ddb333d41407498e9e781c91a527e0e41e9089
+file.2=C\:\\Users\\erica_000\\Documents\\libGDX\\nutty\\android\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\gdx-backend-android-1.9.6_7a84540bbac1e84b0005293aada997e189251be4\\classes.dex
+file.1=C\:\\Users\\erica_000\\Documents\\libGDX\\nutty\\android\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\gdx-box2d-1.9.6_67590e8b7fb1f9af1b6f585fcfa2cedb0a803ae5\\classes.dex
+file.0=C\:\\Users\\erica_000\\Documents\\libGDX\\nutty\\android\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\gdx-1.9.6_41ddb333d41407498e9e781c91a527e0e41e9089\\classes.dex

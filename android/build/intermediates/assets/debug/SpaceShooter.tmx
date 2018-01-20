@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.1" orientation="orthogonal" renderorder="right-down" width="20" height="40" tilewidth="128" tileheight="128" infinite="0" nextobjectid="1">
+ <tileset firstgid="1" name="SpaceTiles" tilewidth="128" tileheight="128" tilecount="190" columns="10">
+  <image source="space_titles128x128_png.png" width="1280" height="2432"/>
+  <tile id="188">
+   <animation>
+    <frame tileid="159" duration="500"/>
+    <frame tileid="168" duration="500"/>
+   </animation>
+  </tile>
+  <tile id="189">
+   <animation>
+    <frame tileid="165" duration="500"/>
+    <frame tileid="174" duration="500"/>
+   </animation>
+  </tile>
+ </tileset>
+ <layer name="Bottom Bottom Layer" width="20" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztlUkKgDAQBPN3F3C9uLzBaDR+QN9mX4QgOBAzgsEUFN2nJnOKEAHfWOECtdFdGOEApdFdmOEEldFd+Oq9GczFf+69sjPtnGzMe2+8r4AlkbY0sCXSlg72RNoSwZhIWxKYEvmECtY3GQj4gmTeU8x7mnmP+94//ke+cwAmQT5X
+  </data>
+ </layer>
+ <layer name="Under Layer" width="20" height="40">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUkAp6qGxeLxD3A/EEKpkHct9EIJ6EJNYNFe8mwzxk98HoZiBuAeI+Ct0Ho1uBuI0C9/XhoQcDyB41b1CZV05l80bBKKAEULP8BwH08p9SMOo+4sFkIJ6CJoZef6LT+MBUIJ6Gw3246KEAAMsqJ2w=
+  </data>
+ </layer>
+ <layer name="Main Layer" width="20" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzdlstKw0AUhoNVkaobpbaCYq17EaS66M6l0HrrRaWlT9AnqLa27+St9eH8B3NgGE4ypzMTkP7wLU4WH39OQiZRZM8zaAuRZNl8V+ACXILzFF9HgMoZqMRUhZ1V1hlUTh19Gwzk28uoXx28gw/wDWaO/Yqa7xN8gTn48ex3IrlRQT8XX1LoeRQD+mh/oXyh75d8RwF8ZbAfc+zp2gRrYBXkjVmlr9ET+LZBDqyALWNW0b9FXYGP60Wzi4/rRbOLz7Y/8/tr2+Mi+1ukJ5ekc+O/+J4i/sx5dPSp7IBazK6Hh3IADkEJFDxdQ/ACxuBNm+l9uo6heWDxvYIRmICpNtP7RD6abT4V7t/E7KXPPj6up/Q/R/e1wD3Dg6PvNvo7p03uMvAl7SrN1wQNhpsUX9o1abL0uRLa9wurE2aj
+  </data>
+ </layer>
+ <layer name="Main Upper Layer" width="20" height="40">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFQw1sBOJNg9i8zUC8hYrmjbpvcJk3CkbBKBgFo2AUjIJRQAkAADZUCyk=
+  </data>
+ </layer>
+ <layer name="Top Layer" width="20" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztls0KgzAQhH3Y0ottvSj4Btb/n0t70WftBDwsIQkmu0IVPxhmERmG5LCJoosz8IAaqCbOzWuhHhqgzvHvB/oSNxGvvUZoEugXe/Tbmre13wwtxF39OuIcnkQvootjcRPOyzX/N/bsdxfI0Ptxekrebba6rV8amGfDN0+ReH4PRd8vrj1zdmxncfQzKaC3YQ6lhCrDbELy3aRoyczd+4qGzFL9pN4lXH7dzDLn
+  </data>
+ </layer>
+ <layer name="Top Top Layer" width="20" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztzjENAAAIA7D514BYPOwhJK2CJkBrrgMAAM8sr8sAnQ==
+  </data>
+ </layer>
+</map>
