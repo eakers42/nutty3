@@ -52,6 +52,7 @@ public class UIScreen extends ScreenAdapter {
             @Override
             public void tap(InputEvent event, float x, float y, int count, int buttonNumber){
                 button.setText("You clicked the button");
+                game.setScreen(new GameScreen(game));
             }
         });
 
