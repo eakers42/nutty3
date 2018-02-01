@@ -73,9 +73,15 @@ public class SpinningMine {
     }
 
     public void drawDebug(ShapeRenderer shapeRenderer) {
+        // Image outline
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.rect(this.collisionRectangle.x, this.collisionRectangle.y,
                 this.collisionRectangle.width, this.collisionRectangle.height);
+        // Collision circle
+        shapeRenderer.setColor(Color.BLUE);
+        float circleX = this.collisionRectangle.x + this.collisionRectangle.width / 2;
+        float circleY = this.collisionRectangle.y + this.collisionRectangle.height / 2;
+        shapeRenderer.circle(circleX, circleY, 36);
     }
 
     public float getX() {
