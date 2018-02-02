@@ -47,7 +47,7 @@ public class UIScreen extends ScreenAdapter {
         final TextButton button = new TextButton("Click Me", skin, "round");
         button.setWidth(400);
         button.setHeight(40);
-        button.setPosition(Gdx.graphics.getWidth() /2 - 200f, Gdx.graphics.getHeight()/2 - 20f);
+        button.setPosition(300, 400, Align.center);
         button.addListener(new ActorGestureListener(){
             @Override
             public void tap(InputEvent event, float x, float y, int count, int buttonNumber){
@@ -56,10 +56,10 @@ public class UIScreen extends ScreenAdapter {
             }
         });
 
-        final TextButton button2 = new TextButton("Another Click", skin, "round");
+        TextButton button2 = new TextButton("Another Click", skin, "round");
 //        button2.setWidth(400);
 //        button2.setHeight(40);
-        button2.setPosition(Gdx.graphics.getWidth() / 2, 450, Align.center);
+        button2.setPosition(300, 300, Align.center);
 
         progressBar = new ProgressBar(0, 100, 1, false, skin);
 //        progressBar.setPosition(320, 350, Align.center);
@@ -90,17 +90,17 @@ public class UIScreen extends ScreenAdapter {
         TextButton btn6 = new TextButton("Radio", skin, "radio");
         btn6.setPosition(400, 210, Align.center);
 
-        TextField tf = new TextField("Text Field", skin);
-        tf.setPosition(300, 300, Align.center);
-        tf.setHeight(40);
+//        TextField tf = new TextField("Text Field", skin);
+//        tf.setPosition(300, 300, Align.center);
+//        tf.setHeight(40);
 
-        Window window = new Window("Drag Me", skin);
-        window.setPosition(300, 600, Align.center);
+//        Window window = new Window("Drag Me", skin);
+//        window.setPosition(300, 600, Align.center);
 
-        stage.addActor(window);
+//        stage.addActor(window);
         stage.addActor(button);
         stage.addActor(button2);
-//        stage.addActor(progressBar);
+        stage.addActor(progressBar);
         stage.addActor(btn);
         stage.addActor(btn2);
         stage.addActor(btn3);
@@ -109,7 +109,7 @@ public class UIScreen extends ScreenAdapter {
         stage.addActor(btn6);
         stage.addActor(btn7);
         stage.addActor(btn8);
-        stage.addActor(tf);
+//        stage.addActor(tf);
         Gdx.input.setInputProcessor(stage);
     }
 
