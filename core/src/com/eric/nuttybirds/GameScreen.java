@@ -1,5 +1,6 @@
 package com.eric.nuttybirds;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -11,10 +12,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -29,11 +32,14 @@ import java.util.List;
  * Created by erica_000 on 1/4/2018.
  */
 
-public class GameScreen extends ScreenAdapter implements InputProcessor {
+public class GameScreen extends ScreenAdapter implements GestureDetector.GestureListener {
     private static final float WORLD_WIDTH = 1200;
     private static final float WORLD_HEIGHT = 1600;
     private static final float MAP_WIDTH = 2560;
     private static final float MAP_HEIGHT = 5120;
+
+    private float viewportWidth = WORLD_WIDTH;
+    private float viewportHeight = WORLD_HEIGHT;
 
     private ShapeRenderer shapeRenderer;
     private Viewport viewport;
@@ -46,6 +52,8 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private Vector3 screenCoordinates = new Vector3();
+    private Vector2 flingVelocity = new Vector2();
+    private int flingVelocityCounter = 0;
     private boolean mouseDown = false;
 
     private Texture mineTexture;
@@ -65,6 +73,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void show() {
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
         camera = new OrthographicCamera();
         //camera.position.set(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, 0);
         //camera.update();
@@ -80,7 +89,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 
         mineTexture = game.getAssetManager().get("mine_strip25.png");
 
-        Gdx.input.setInputProcessor(this);
+        Gdx.input.setInputProcessor(new GestureDetector(this));
     }
 
     @Override
@@ -126,6 +135,11 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         float minY = WORLD_HEIGHT / 2;
         float maxY = mapHeight - minY;
 
+        if(flingVelocityCounter > 0) {
+            camera.translate(flingVelocity);
+        }
+
+
         camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
         camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
         camera.update();
@@ -170,59 +184,29 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
                 iter.remove();
             }
         }
+
+        // Update fling
+        if(flingVelocityCounter > 0) {
+            if(flingVelocityCounter < 5) {
+                flingVelocity.scl(0.5f);
+            }
+            flingVelocityCounter--;
+        }
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
 
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        mouseDown = true;
-        String msg = String.format("Mouse Down: %d,%d", screenX, screenY);
-        Gdx.app.log("MyTag", msg);
-        System.out.println("Mouse down");
-
-        Vector3 newCamCoord = camera.unproject(screenCoordinates.set(screenX, screenY, 0));
-        camera.position.set(newCamCoord);
-        System.out.format("New Coords: %f,%f\n", camera.position.x, camera.position.y);
-//        camera.position.add(5, 0, 0);
-        return true;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-//        camera.unproject(screenCoordinates.set(screenX, screenY, 0));
-        return true;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-//        Gdx.app.log("MyTag", "Mouse Moved");
-//        camera.unproject(screenCoordinates.set(screenX, screenY, 0));
-        return true;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
+//    @Override
+//    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+//        mouseDown = true;
+//        String msg = String.format("Mouse Down: %d,%d", screenX, screenY);
+//        Gdx.app.log("MyTag", msg);
+//        System.out.println("Mouse down");
+//
+//        Vector3 newCamCoord = camera.unproject(screenCoordinates.set(screenX, screenY, 0));
+//        camera.position.set(newCamCoord);
+//        System.out.format("New Coords: %f,%f\n", camera.position.x, camera.position.y);
+//        return true;
+//    }
 
     public TiledMap getTiledMap() {
         return tiledMap;
@@ -230,5 +214,61 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 
     public void setTiledMap(TiledMap tiledMap) {
         this.tiledMap = tiledMap;
+    }
+
+    @Override
+    public boolean touchDown(float x, float y, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean tap(float x, float y, int count, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean longPress(float x, float y) {
+        return false;
+    }
+
+    @Override
+    public boolean fling(float velocityX, float velocityY, int button) {
+//        this.flingVelocity.set(velocityX, velocityY);
+//        Gdx.app.debug("FLING", "FLING: " + velocityX + " " + velocityY);
+        return false;
+    }
+
+    @Override
+    public boolean pan(float x, float y, float deltaX, float deltaY) {
+        Gdx.app.debug("PAN", "PAN: " + deltaX + " " + deltaY);
+        this.flingVelocity.set(-deltaX, deltaY);
+        this.flingVelocityCounter = 30;
+        return true;
+    }
+
+    @Override
+    public boolean panStop(float x, float y, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean zoom(float initialDistance, float distance) {
+        System.out.format("Zoom: %f  Initial: %f  Distance: %f", camera.zoom, initialDistance, distance);
+        float update = MathUtils.clamp((initialDistance - distance), -1, 1);
+        update *= 0.005;
+        camera.zoom += update;
+        camera.zoom = MathUtils.clamp((float)camera.zoom + update, 0.5f, 2.5f);
+        System.out.format("Update: %f  New Zoom: %f", update, camera.zoom);
+        return true;
+    }
+
+    @Override
+    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+        return false;
+    }
+
+    @Override
+    public void pinchStop() {
+        Gdx.app.debug("PINCH STOP", "PINCH STOP");
     }
 }
