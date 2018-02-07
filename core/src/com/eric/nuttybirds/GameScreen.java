@@ -55,6 +55,13 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
     private Vector2 flingVelocity = new Vector2();
     private int flingVelocityCounter = 0;
     private boolean mouseDown = false;
+    private boolean zooming = false;
+    private Vector3 centerPoint;
+    private boolean centering = false;
+    private float centerSpeed = 50.0f;
+    private boolean centerZooming = false;
+    private float centerZoom = 0;
+    private float centerZoomSpeed = 0.05f;
 
     private Texture mineTexture;
 
@@ -131,17 +138,13 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
         float mapWidth = tileLayer.getWidth() * tileLayer.getTileWidth();
         float mapHeight = tileLayer.getHeight() * tileLayer.getTileHeight();
         float minX = WORLD_WIDTH / 2;
-        float maxX = mapWidth - minX;
+        float maxX = mapWidth;
         float minY = WORLD_HEIGHT / 2;
-        float maxY = mapHeight - minY;
-
-        if(flingVelocityCounter > 0) {
-            camera.translate(flingVelocity);
-        }
+        float maxY = mapHeight;
 
 
-        camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
-        camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
+        camera.position.x = MathUtils.clamp(camera.position.x, 0, maxX);
+        camera.position.y = MathUtils.clamp(camera.position.y, 0, maxY);
         camera.update();
         tiledMapRenderer.setView(camera);
 
@@ -191,6 +194,46 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
                 flingVelocity.scl(0.5f);
             }
             flingVelocityCounter--;
+            camera.translate(flingVelocity);
+        }
+
+        if(centering) {
+            if(this.camera.position.equals(centerPoint)) {
+                Gdx.app.debug("CENTER", "Moving to center");
+                centering = false;
+            }
+            else {
+                Vector3 diff = this.centerPoint.cpy();
+                diff.sub(this.camera.position);
+                float length = diff.len();
+                Gdx.app.debug("CENTER", "Diff: " + diff.toString());
+                Gdx.app.debug("CENTER", "Length: " + length + " Speed: " + centerSpeed);
+                if(length <= centerSpeed) {
+                    this.camera.position.set(this.centerPoint);
+                }
+                else {
+                    diff.nor();
+                    Vector3 dir = diff.scl(centerSpeed);
+                    Gdx.app.debug("CENTER", "Direction: " + dir.toString());
+                    this.camera.translate(dir);
+                }
+
+
+            }
+        }
+
+        if(centerZooming) {
+            if(Math.abs(camera.zoom - centerZoom) <= centerZoomSpeed) {
+                this.camera.zoom = centerZoom;
+                centerZooming = false;
+            }
+            else {
+                float dir = centerZoom - this.camera.zoom;
+                // Normalize to 1 or -1
+                dir /= Math.abs(dir);
+                dir *= centerZoomSpeed;
+                this.camera.zoom += dir;
+            }
         }
     }
 
@@ -228,6 +271,12 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 
     @Override
     public boolean longPress(float x, float y) {
+        Vector3 longPoint = new Vector3(x, y, 0);
+        this.centerPoint = this.camera.unproject(longPoint);
+        this.centering = true;
+
+        this.centerZoom = 0.5f;
+        this.centerZooming = true;
         return false;
     }
 
@@ -241,7 +290,9 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         Gdx.app.debug("PAN", "PAN: " + deltaX + " " + deltaY);
-        this.flingVelocity.set(-deltaX, deltaY);
+        this.centering = false;
+        this.centerZooming = false;
+        this.flingVelocity.set(-deltaX * this.camera.zoom, deltaY * this.camera.zoom);
         this.flingVelocityCounter = 30;
         return true;
     }
@@ -253,22 +304,62 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 
     @Override
     public boolean zoom(float initialDistance, float distance) {
+//        if(zooming) {
         System.out.format("Zoom: %f  Initial: %f  Distance: %f", camera.zoom, initialDistance, distance);
         float update = MathUtils.clamp((initialDistance - distance), -1, 1);
         update *= 0.005;
         camera.zoom += update;
-        camera.zoom = MathUtils.clamp((float)camera.zoom + update, 0.5f, 2.5f);
+        camera.zoom = MathUtils.clamp((float) camera.zoom + update, 0.5f, 2.5f);
         System.out.format("Update: %f  New Zoom: %f", update, camera.zoom);
         return true;
+//        }
     }
 
     @Override
     public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-        return false;
+//        if(zooming == false) {
+//            zooming = true;
+//            Gdx.app.debug("PINCH", "Initial: " + initialPointer1.toString() + " " + initialPointer2);
+//            Gdx.app.debug("PINCH", "Final: " + pointer1.toString() + " " + pointer2.toString());
+//            // The distance calculations are squared distances
+//            float initialDistance = initialPointer1.dst2(initialPointer2);
+//            float finalDistance = pointer1.dst2(pointer2);
+//            Gdx.app.debug("PINCH", "Distance: Initial: " + initialDistance + " Final: " + finalDistance);
+//
+//            Vector2 shortVec1 = pointer1;
+//            Vector2 shortVec2 = pointer2;
+//
+//            // Center based on the points that are closer to each other. If it started close and moved away,
+//            // use the initial distance. If it started large and ended closer, user the final distance.
+//            Vector3 center = new Vector3((initialPointer1.x + pointer1.x) / 2, (initialPointer1.y + pointer1.y) / 2, 0);
+//            centerPoint = this.camera.unproject(center);
+//            centering = true;
+////            if (initialDistance < finalDistance) {
+////                shortVec1 = initialPointer1;
+////                shortVec2 = initialPointer2;
+////            }
+//            Gdx.app.debug("PINCH", "Center: " + centerPoint.toString());
+//            //this.camera.position.set(this.camera.unproject(center));
+////            Gdx.app.debug("PINCH", "Unprojected: " + this.camera.position);
+//        }
+
+        // Average the two short vectors
+//        center = shortVec1.add(shortVec2);
+//        center = center.scl(0.5f);
+
+        // Determine the ratio of initial to final distance to determine by how much to zoom
+//        float zoomRatio = initialDistance / finalDistance;
+//        zoomRatio *= 0.001;
+//        Gdx.app.debug("PINCH","Zoom Update: " + zoomRatio);
+//        this.camera.zoom += MathUtils.clamp(zoomRatio, -0.05f, 0.05f);
+//        this.camera.zoom = MathUtils.clamp(this.camera.zoom, 0.5f, 1.5f);
+
+        return true;
     }
 
     @Override
     public void pinchStop() {
         Gdx.app.debug("PINCH STOP", "PINCH STOP");
+        zooming = false;
     }
 }
