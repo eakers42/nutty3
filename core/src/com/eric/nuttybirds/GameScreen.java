@@ -96,7 +96,9 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 
         mineTexture = game.getAssetManager().get("mine_strip25.png");
 
-        Gdx.input.setInputProcessor(new GestureDetector(this));
+        GestureDetector gd = new GestureDetector(this);
+        gd.setLongPressSeconds(0.7f);
+        Gdx.input.setInputProcessor(gd);
     }
 
     @Override
