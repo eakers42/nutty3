@@ -288,19 +288,22 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
+        if(count == 2) {
+            Vector3 longPoint = new Vector3(x, y, 0);
+            this.centerPoint = this.camera.unproject(longPoint);
+            this.centering = true;
+
+            this.centerZoom = 0.2f;
+            this.centerZooming = true;
+            this.centerSteps = 50;
+            this.centerZoomSteps = 50;
+        }
         return false;
     }
 
     @Override
     public boolean longPress(float x, float y) {
-        Vector3 longPoint = new Vector3(x, y, 0);
-        this.centerPoint = this.camera.unproject(longPoint);
-        this.centering = true;
 
-        this.centerZoom = 0.2f;
-        this.centerZooming = true;
-        this.centerSteps = 50;
-        this.centerZoomSteps = 50;
         return false;
     }
 
