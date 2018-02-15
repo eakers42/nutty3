@@ -96,6 +96,38 @@ public class SpinningMine {
         return y;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SpinningMine that = (SpinningMine) o;
+
+        if (Float.compare(that.x, x) != 0) return false;
+        if (Float.compare(that.y, y) != 0) return false;
+        if (Float.compare(that.xSpeed, xSpeed) != 0) return false;
+        if (Float.compare(that.ySpeed, ySpeed) != 0) return false;
+        if (Float.compare(that.animationTimer, animationTimer) != 0) return false;
+        if (gameScreen != null ? !gameScreen.equals(that.gameScreen) : that.gameScreen != null)
+            return false;
+        if (collisionRectangle != null ? !collisionRectangle.equals(that.collisionRectangle) : that.collisionRectangle != null)
+            return false;
+        return flying != null ? flying.equals(that.flying) : that.flying == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = gameScreen != null ? gameScreen.hashCode() : 0;
+        result = 31 * result + (collisionRectangle != null ? collisionRectangle.hashCode() : 0);
+        result = 31 * result + (x != +0.0f ? Float.floatToIntBits(x) : 0);
+        result = 31 * result + (y != +0.0f ? Float.floatToIntBits(y) : 0);
+        result = 31 * result + (xSpeed != +0.0f ? Float.floatToIntBits(xSpeed) : 0);
+        result = 31 * result + (ySpeed != +0.0f ? Float.floatToIntBits(ySpeed) : 0);
+        result = 31 * result + (animationTimer != +0.0f ? Float.floatToIntBits(animationTimer) : 0);
+        result = 31 * result + (flying != null ? flying.hashCode() : 0);
+        return result;
+    }
+
     public void setY(float y) {
         this.y = y;
     }

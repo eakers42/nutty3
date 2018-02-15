@@ -19,8 +19,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
@@ -37,6 +42,7 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
     private static final float WORLD_HEIGHT = 1600;
     private static final float MAP_WIDTH = 2560;
     private static final float MAP_HEIGHT = 5120;
+    private static final float MIN_ZOOM = 0.35f;
 
     private float viewportWidth = WORLD_WIDTH;
     private float viewportHeight = WORLD_HEIGHT;
@@ -65,7 +71,14 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
     private int centerSteps = 50;
     private int centerZoomSteps = 50;
 
+    private Stage hudStage;
+    private Skin hudSkin;
+    private Hud hud;
+    private Vector2 cameraPosition = new Vector2();
+    private OrthographicCamera hudCamera;
+
     private Texture mineTexture;
+
 
     // Sprites
     private List<SpinningMine> mineList = new ArrayList<SpinningMine>();
@@ -82,7 +95,6 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 
     @Override
     public void show() {
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
         camera = new OrthographicCamera();
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
@@ -93,14 +105,27 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
         TiledMapTileLayer tileLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         float mapWidth = tileLayer.getWidth() * tileLayer.getTileWidth();
         float mapHeight = tileLayer.getHeight() * tileLayer.getTileHeight();
+
+        camera.position.set(mapWidth / 2, mapHeight / 2, 0);
         Gdx.app.debug("MAP", "W/H: " + mapWidth + "/" + mapHeight);
 
+        hudSkin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        hudStage = new Stage(new ExtendViewport(300, 500));
+//        Label pauseLabel = new Label("Paused", hudSkin, "title");
+//        pauseLabel.setPosition(150, 100, Align.center);
+        hud = new Hud(this.mineList, this.camera, mapWidth, mapHeight);
+        hud.setColor(Color.FIREBRICK.r, Color.FIREBRICK.g, Color.FIREBRICK.b, 0.6f);
+        hud.setWidth(100);
+        hud.setHeight(150);
+        hud.setPosition(250, 75, Align.center);
+        hudStage.addActor(hud);
+//        hudStage.addActor(pauseLabel);
 
         //camera.position.set(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, 0);
         //camera.update();
 //        viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         viewport = new ExtendViewport(mapWidth, mapHeight, camera);
-        viewport.apply(true);
+        viewport.apply();
 
 
 
@@ -109,6 +134,7 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 
         GestureDetector gd = new GestureDetector(this);
         gd.setLongPressSeconds(0.7f);
+        gd.setTapSquareSize(30);
         Gdx.input.setInputProcessor(gd);
     }
 
@@ -118,6 +144,8 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
         clearScreen();
         draw();
         drawDebug();
+        hudStage.act(delta);
+        hudStage.draw();
     }
 
     private void drawDebug() {
@@ -133,32 +161,7 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
     }
 
     private void draw() {
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            camera.position.x -=4;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            camera.position.x += 4;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-            camera.position.y +=4;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            camera.position.y -= 4;
-        }
 
-
-        TiledMapTileLayer tileLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
-        float mapWidth = tileLayer.getWidth() * tileLayer.getTileWidth();
-        float mapHeight = tileLayer.getHeight() * tileLayer.getTileHeight();
-        float minX = WORLD_WIDTH / 2;
-        float maxX = mapWidth;
-        float minY = WORLD_HEIGHT / 2;
-        float maxY = mapHeight;
-
-
-        camera.position.x = MathUtils.clamp(camera.position.x, 0, maxX);
-        camera.position.y = MathUtils.clamp(camera.position.y, 0, maxY);
-        camera.update();
         tiledMapRenderer.setView(camera);
 
         // Draw the mines after the map so everything shows above the map
@@ -257,6 +260,34 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
                 this.centerZoomSteps--;
             }
         }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            camera.position.x -=4;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            camera.position.x += 4;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+            camera.position.y +=4;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            camera.position.y -= 4;
+        }
+
+
+        TiledMapTileLayer tileLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+        float mapWidth = tileLayer.getWidth() * tileLayer.getTileWidth();
+        float mapHeight = tileLayer.getHeight() * tileLayer.getTileHeight();
+        float minX = mapWidth * this.camera.zoom / 2;
+        float maxX = mapWidth - minX;
+        float minY = mapHeight * this.camera.zoom / 2;
+        float maxY = mapHeight - minY;
+
+
+        camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
+        camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
+        this.cameraPosition.set(this.camera.position.x, this.camera.position.y);
+        camera.update();
     }
 
 
@@ -293,7 +324,7 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
             this.centerPoint = this.camera.unproject(longPoint);
             this.centering = true;
 
-            this.centerZoom = 0.2f;
+            this.centerZoom = MIN_ZOOM;
             this.centerZooming = true;
             this.centerSteps = 50;
             this.centerZoomSteps = 50;
@@ -336,7 +367,7 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
         float update = MathUtils.clamp((initialDistance - distance), -1, 1);
         update *= 0.005;
         camera.zoom += update;
-        camera.zoom = MathUtils.clamp((float) camera.zoom + update, 0.2f, 1f);
+        camera.zoom = MathUtils.clamp((float) camera.zoom + update, MIN_ZOOM, 1f);
         System.out.format("Update: %f  New Zoom: %f", update, camera.zoom);
         return true;
 //        }
