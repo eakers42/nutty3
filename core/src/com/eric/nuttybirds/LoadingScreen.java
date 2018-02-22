@@ -15,9 +15,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.eric.nuttybirds.config.EnemyManager;
+import com.eric.nuttybirds.config.LevelData;
+import com.eric.nuttybirds.config.LevelManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -37,8 +44,11 @@ public class LoadingScreen extends ScreenAdapter {
     private final NuttyGame game;
     private OrthographicCamera camera;
 
-    public LoadingScreen(NuttyGame game) {
+    private LevelData levelData;
+
+    public LoadingScreen(NuttyGame game, LevelData levelData) {
         this.game = game;
+        this.levelData = levelData;
     }
 
     @Override
@@ -61,17 +71,33 @@ public class LoadingScreen extends ScreenAdapter {
         progressBar.setAnimateDuration(0.1f);
         stage.addActor(progressBar);
 
-        game.getAssetManager().load(Constants.TILED_MAP_NAME, TiledMap.class);
-        game.getAssetManager().load("pete.tmx", TiledMap.class);
-        game.getAssetManager().load("mine_strip25.png", Texture.class);
-        game.getAssetManager().load("pete.png", Texture.class);
-        game.getAssetManager().load("badlogic.jpg", Texture.class);
-        game.getAssetManager().load("acorn.png", Texture.class);
-        game.getAssetManager().load("space_titles128x128_png.png", Texture.class);
-        game.getAssetManager().load("floor.png", Texture.class);
-        game.getAssetManager().load("acorn.wav", Sound.class);
-        game.getAssetManager().load("jump.wav", Sound.class);
-        game.getAssetManager().load("peteTheme.mp3", Music.class);
+        // Unload unneeded assets. Load the ones we need
+        Array<String> loadedAssets = this.game.getAssetManager().getAssetNames();
+        Set<String> neededAssets = this.levelData.getAssets();
+        for (String loadedAsset : loadedAssets) {
+            if (neededAssets.contains(loadedAsset)) {
+                neededAssets.remove(loadedAsset);
+            }
+            else {
+                this.game.getAssetManager().unload(loadedAsset);
+            }
+        }
+
+        for (String neededAsset : neededAssets) {
+            this.game.getAssetManager().load(neededAsset, Texture.class);
+        }
+
+//        game.getAssetManager().load(Constants.TILED_MAP_NAME, TiledMap.class);
+//        game.getAssetManager().load("pete.tmx", TiledMap.class);
+//        game.getAssetManager().load("mine_strip25.png", Texture.class);
+//        game.getAssetManager().load("pete.png", Texture.class);
+//        game.getAssetManager().load("badlogic.jpg", Texture.class);
+//        game.getAssetManager().load("acorn.png", Texture.class);
+//        game.getAssetManager().load("space_titles128x128_png.png", Texture.class);
+//        game.getAssetManager().load("floor.png", Texture.class);
+//        game.getAssetManager().load("acorn.wav", Sound.class);
+//        game.getAssetManager().load("jump.wav", Sound.class);
+//        game.getAssetManager().load("peteTheme.mp3", Music.class);
 
     }
 

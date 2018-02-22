@@ -23,14 +23,26 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.eric.nuttybirds.config.EnemyData;
+import com.eric.nuttybirds.config.EnemyManager;
+import com.eric.nuttybirds.config.EnemyManagerSerializer;
+import com.eric.nuttybirds.config.LevelData;
+import com.eric.nuttybirds.config.LevelManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.badlogic.gdx.utils.JsonWriter.OutputType.json;
 
 
 /**
@@ -86,6 +98,7 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 
     public GameScreen(NuttyGame game) {
         this.game = game;
+
     }
 
     @Override
@@ -115,9 +128,9 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 //        pauseLabel.setPosition(150, 100, Align.center);
         hud = new Hud(this.mineList, this.camera, mapWidth, mapHeight);
         hud.setColor(Color.FIREBRICK.r, Color.FIREBRICK.g, Color.FIREBRICK.b, 0.6f);
-        hud.setWidth(100);
-        hud.setHeight(150);
-        hud.setPosition(250, 75, Align.center);
+        hud.setWidth(80);
+        hud.setHeight(120);
+        hud.setPosition(260, 60, Align.center);
         hudStage.addActor(hud);
 //        hudStage.addActor(pauseLabel);
 
@@ -134,8 +147,10 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 
         GestureDetector gd = new GestureDetector(this);
         gd.setLongPressSeconds(0.7f);
-        gd.setTapSquareSize(30);
+        gd.setTapSquareSize(40);
         Gdx.input.setInputProcessor(gd);
+
+
     }
 
     @Override
@@ -326,8 +341,8 @@ public class GameScreen extends ScreenAdapter implements GestureDetector.Gesture
 
             this.centerZoom = MIN_ZOOM;
             this.centerZooming = true;
-            this.centerSteps = 50;
-            this.centerZoomSteps = 50;
+            this.centerSteps = 30;
+            this.centerZoomSteps = 30;
         }
         return false;
     }

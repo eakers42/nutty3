@@ -1,0 +1,27 @@
+{
+  "Tank": {
+    "type": "ground",
+    "collisionType": "box",
+    "textures": {
+      "texture": "name"
+    },
+    "collisionWidth": 80,
+    "collisionHeight": 90,
+    "offsets": {
+      "turretX": 40,
+      "turretY": 45
+    }
+  },
+  "Mine1": {
+    "type": "air",
+    "collisionType": "circle",
+    "textures": {
+      "texture": "mine_strip25.png",
+      "turret": "pete.png"
+    },
+    "offsets": {
+      "someOffset": 25
+    }
+    "collisionRadius": 36,
+  }
+}

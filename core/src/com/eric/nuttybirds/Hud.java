@@ -76,14 +76,14 @@ public class Hud extends Actor {
         Vector2 center = new Vector2(centerX, centerY);
         Vector2 left = new Vector2(center.x - 5, center.y - 5);
         Vector2 right = new Vector2(center.x + 5, center.y - 5);
-        Gdx.app.debug("HUD", "CENTER: " + center.toString());
+//        Gdx.app.debug("HUD", "CENTER: " + center.toString());
 //        Gdx.app.debug("HUD", "LEFT: " + left.toString());
 //        Gdx.app.debug("HUD", "RIGHT: " + right.toString());
-        Gdx.app.debug("HUD", "CAMERA: " + this.camera.position.toString());
-        Gdx.app.debug("HUD", "VIEWPORT WIDTH: " + viewportWidth);
-        Gdx.app.debug("HUD", "VIEWPORT HEIGHT: " + viewportHeight);
-        Gdx.app.debug("HUD", "VIEWPORT LEFT: " + viewportLeftX + " " + viewportLeftY);
-        Gdx.app.debug("HUD", "VIEWPORT RIGHT: " + viewportRightX + " " + viewportRightY);
+//        Gdx.app.debug("HUD", "CAMERA: " + this.camera.position.toString());
+//        Gdx.app.debug("HUD", "VIEWPORT WIDTH: " + viewportWidth);
+//        Gdx.app.debug("HUD", "VIEWPORT HEIGHT: " + viewportHeight);
+//        Gdx.app.debug("HUD", "VIEWPORT LEFT: " + viewportLeftX + " " + viewportLeftY);
+//        Gdx.app.debug("HUD", "VIEWPORT RIGHT: " + viewportRightX + " " + viewportRightY);
 
         shapeRenderer.setColor(Color.GREEN.r, Color.GREEN.g, Color.GREEN.b, parentAlpha);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

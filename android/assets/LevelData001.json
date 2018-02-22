@@ -1,0 +1,17 @@
+{
+  "levelData": [
+    {
+      "title": "Level1",
+      "waveArray": [
+        "Mine1",
+        "Mine1"
+      ]
+    },
+    {
+      "title": "Level2",
+      "waveArray": [
+        "Tank"
+      ]
+    }
+  ]
+}
